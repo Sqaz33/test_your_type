@@ -1,54 +1,117 @@
 /**
  * @file typo_checker.hpp
- * @brief Файл содержит объявление класса IncrementalStringComparer. 
+ * @brief This file contains the declaration of the IncrementalStringComparer class.
  * 
- * @author Матвеев С.А. mail: mset321@gmail.com
+ * @author Matveev S.A. email: mset321@gmail.com
  */
 
-#ifndef SRC_INCLUDE_TYPO_CHECKER
-#define SRC_INCLUDE_TYPO_CHECKER
+#ifndef INCREMENTAL_STRING_COMPARER
+#define INCREMENTAL_STRING_COMPARER
 
-#include <string>
+#include <>
 
-namespace typo_checker {
+namespace incremental_string_comparer {
 
 /**
- * @class TypoChecker
- * @brief Класс для сравнения строк.
+ * @class IncrementalStringComparer
+ * @brief A class for incremental string comparison.
  * 
- * Основные задачи класса:
- *  -
+ * @tparam String A string Class.
+ * 
+ * The main tasks of the class:
+ *  - Compare the character passed to the pushLetter(c) method with the character 
+ *    in the string passed to the constructor at a certain position (index). 
+ *    Initially, index = 0. With each call to pushLetter(c), index 
+ *    increments by 1.
  */
+template <std::ranges::range_value_t String>
 class IncrementalStringComparer {
 public:
-    IncrementalStringComparer() = default; 
-    IncrementalStringComparer(const std::string& src);
+    /**
+     * @brief Default constructor for IncrementalStringComparer.
+     * 
+     */
+    IncrementalStringComparer() = default;
+
+    /**
+     * @brief Constructs a new IncrementalStringComparer object.
+     * 
+     * @param src The string to compare against.
+     */
+    IncrementalStringComparer(const String& src) :
+        src_(src)
+    {}
     
-    void setSrc(const std::string& src);
-    bool pushLetter(char c);
-    char popLetter();
+    /**
+     * @brief Sets the string to compare against.
+     * 
+     * @param src The string to compare against.
+     */
+    void setSrc(const String& src) {
+        clear();
+        src_ = src;
+    }
 
-    void clear();
-    void clearChecked();
+    /**
+     * @brief Compares the input character with the character 
+     *        in the string passed to the constructor at a certain index. 
+     *        Initially, index = 0. With each call, the index increments by 1.
+     * 
+     * @tparam Char A class for char in String. 
+     * @param c The character to compare.
+     * @return true If the characters match.
+     * @return false If the characters do not match or index 
+     *         more than of the comparison string length.
+     */
+    template <class Char>
+    bool pushLetter(Char c) {
+        if (index2Check_ >= src_.length()) {
+            ++index2Check_;
+            return false;
+        }
+        return src_[index2Check_++] == c;
+    }
 
+    /**
+     * @brief Decrements the index by 1.
+     * 
+     */
+    void popLetter() {
+        --index2Check_; 
+    }
+
+    /**
+     * @brief Clears the string and resets the index to zero.
+     * 
+     */
+    void clear() {
+        index2Check_ = 0;
+        src_.clear();
+    }
+
+    /**
+     * @brief Returns the length of the comparison string.
+     * 
+     * @return auto The length of the comparison string.
+     */
     auto srcLength() const {
         return src_.length();
     }
 
-    auto checkedLength() const {
-        return checked_.length();
+    /**
+     * @brief Returns a reference to the comparison string.
+     * 
+     * @return const auto& A reference to the comparison string.
+     */
+    const auto& src() const {
+        return src_;
     }
 
-    const auto& checked() const {
-        return checked_;
-    }
 private:
     size_t index2Check_ = 0;
-    std::string src_;
-    std::string checked_;
+    String src_;
 };
 
-} // typo_checker
+} // namespace incremental_string_comparer
 
-
-#endif // SRC_INCLUDE_TYPO_CHECKER
+#endif // INCREMENTAL_STRING_COMPARER

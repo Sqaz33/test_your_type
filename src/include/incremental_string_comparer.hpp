@@ -1,3 +1,10 @@
+/**
+ * @file typo_checker.hpp
+ * @brief Файл содержит объявление класса IncrementalStringComparer. 
+ * 
+ * @author Матвеев С.А. mail: mset321@gmail.com
+ */
+
 #ifndef SRC_INCLUDE_TYPO_CHECKER
 #define SRC_INCLUDE_TYPO_CHECKER
 
@@ -5,10 +12,17 @@
 
 namespace typo_checker {
 
-class TypoChecker {
+/**
+ * @class TypoChecker
+ * @brief Класс для сравнения строк.
+ * 
+ * Основные задачи класса:
+ *  -
+ */
+class IncrementalStringComparer {
 public:
-    TypoChecker() = default; 
-    TypoChecker(const std::string& src);
+    IncrementalStringComparer() = default; 
+    IncrementalStringComparer(const std::string& src);
     
     void setSrc(const std::string& src);
     bool pushLetter(char c);

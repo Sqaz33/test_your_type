@@ -9,11 +9,17 @@
 #define SRC_INCLUDE_MAINWINDOW_HPP
 
 #include <memory>
+#include <string>
 
+#include <QFileDialog>
 #include <QMainWindow>
+#include <QString>
 #include <QWidget>
 
 #include "ui_mainwindow.h"
+
+#include "incremental_string_comparer.hpp"
+
 
 namespace mainwindow {
 
@@ -25,10 +31,20 @@ public:
     ~MainWindow();
     
 private:
-    void setupTextEdit();
+    void setupConnections();
+    std::string getFileNameViaFileDialog();
+
+private slots:
+    void loadTextNPutOnEditTextWidget();
+    void textEditWidgetInputTextHandler();
+    void setTextEditCursorOnCurCheckedPos();
 
 protected:
+    int curCheckedPos = 0;
+    QString pre;
     std::unique_ptr<Ui::MainWindow> ui;
+
+    incremental_string_comparer::IncrementalStringComparer<QString> strComp;
 };
 
 } // namespace mainwindow

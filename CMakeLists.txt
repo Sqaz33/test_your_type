@@ -31,7 +31,7 @@ target_link_libraries(main PRIVATE Qt5::Core Qt5::Widgets)
 
 #############################################
 enable_address_sanitizer(main)
-enable_address_sanitizer(tst)
+
 
 
 

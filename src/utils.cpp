@@ -1,11 +1,11 @@
-#include "include/text_load.hpp"
+#include "include/utils.hpp"
 
 #include <algorithm>
 #include <string>
 #include <iterator>
 #include <fstream>
 
-namespace text_loader {
+namespace utils {
 
 void loadText(const char* file, std::string& text) {
     std::fstream f(file);
@@ -18,4 +18,4 @@ void loadText(const char* file, std::string& text) {
     f.close();
 }
 
-} // namespace text_load
+} // namespace utils

@@ -1,17 +1,9 @@
-file(GLOB_RECURSE SRC "../src/*.cpp")
-file(GLOB_RECURSE INC "../src/*.hpp")
+add_executable(isc_tst IncrementalStringComparer_tests.cpp) 
 
-set(SRC_WITH_NO_MAIN_CPP "")
-foreach(src_f ${SRC})
-    if(NOT src_f MATCHES "main\.cpp")
-        list(APPEND SRC_WITH_NO_MAIN_CPP ${src_f})
-    endif()
-endforeach()
+include(../cmake/addres_sanitizer.cmake)
 
-file(GLOB SRC_FOR_TEST "./*.cpp")
+target_link_libraries(isc_tst PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
 
-add_executable(tst ${SRC_WITH_NO_MAIN_CPP} ${SRC_FOR_TEST} ${INC}) 
+enable_address_sanitizer(isc_tst)
 
-target_link_libraries(tst PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
-
-add_test(tc_tst tst)
+add_test(isc_tst tst)

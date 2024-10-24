@@ -8,7 +8,7 @@
 #ifndef INCREMENTAL_STRING_COMPARER
 #define INCREMENTAL_STRING_COMPARER
 
-#include <>
+#include <vector>
 
 namespace incremental_string_comparer {
 
@@ -23,8 +23,9 @@ namespace incremental_string_comparer {
  *    in the string passed to the constructor at a certain position (index). 
  *    Initially, index = 0. With each call to pushLetter(c), index 
  *    increments by 1.
+ *  - Сохранят индексы оши
  */
-template <std::ranges::range_value_t String>
+template <class String>
 class IncrementalStringComparer {
 public:
     /**
@@ -65,11 +66,14 @@ public:
      */
     template <class Char>
     bool pushLetter(Char c) {
-        if (index2Check_ >= src_.length()) {
-            ++index2Check_;
-            return false;
+        if (index2Check_ < src_.length()) {
+            if (src_[index2Check_] == c) {
+                ++index2Check_;
+                return true;
+            }
         }
-        return src_[index2Check_++] == c;
+        mistakes_.push_back(index2Check_++);
+        return false;
     }
 
     /**
@@ -77,7 +81,9 @@ public:
      * 
      */
     void popLetter() {
-        --index2Check_; 
+        if (mistakes_.back() == (--index2Check_)) {
+            mistakes_.erase(mistakes_.begin() + mistakes.size() - 1);
+        }
     }
 
     /**
@@ -87,6 +93,7 @@ public:
     void clear() {
         index2Check_ = 0;
         src_.clear();
+        mistakes_.clear();
     }
 
     /**
@@ -103,14 +110,26 @@ public:
      * 
      * @return const auto& A reference to the comparison string.
      */
-    const auto& src() const {
-        return src_;
+    decltype(auto) src() const {
+        return (src_);
+    }
+    
+    /**
+     * @brief Returns a reference to the stack, that contains the indeces of mistakes.
+     * 
+     * @return const auto& A reference to the stack.
+     */
+    decltype(auto) mistakes() const {
+        return (mistakes_);
     }
 
 private:
-    size_t index2Check_ = 0;
+    int index2Check_ = 0;
     String src_;
+    std::vector<size_t> mistakes_;
 };
+
+
 
 } // namespace incremental_string_comparer
 
